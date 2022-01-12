@@ -1,0 +1,42 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </head>
+  <body>
+    <h1>This is the seventh homework</h1>
+    <% require 'pg' %>
+    <% connection = PG::connect(dbname: "goya") %>
+    <% connection.internal_encoding = "UTF-8" %>
+   
+    <% result = connection.exec("select length,weight,quality,give_for,date from crops WHERE NOT (give_for ='自家消費');") %>
+    <% data = [] %>
+    <% result.each do |record| %>
+      <%  data << "ゴーヤの長さ：#{record["length"]} ゴーヤの重さ:#{record["weight"]} 売った相手：#{record["give_for"]}　品質：#{record["quality"]}" %>
+    <% end %>
+    <form action="goya.cgi" method="POST">
+       下記のボタンを押すと、譲渡先が自家消費ではないもののgoyaの情報を載せたページ<br><br>
+       <!-- valueには、送りたいデータを代入する -->
+       <!-- name="goya"を、情報の目印とする -->
+     
+       <input type="text" name="goya" value="<%= data.join(' ') %>">
+      <input type="submit" name="送信" >
+    </form>
+    <% require 'pg' %>
+    <% connection = PG::connect(dbname: "goya") %>
+    <% connection.internal_encoding = "UTF-8" %>
+   
+    <% result = connection.exec("select length,weight,quality,give_for,date from crops WHERE quality=false"); %>
+    <% data = [] %>
+    <% result.each do |record| %>
+      <%  data << "ゴーヤの長さ：#{record["length"]} ゴーヤの重さ:#{record["weight"]} 売った相手：#{record["give_for"]}　品質：#{record["quality"]}" %>
+    <% end %>
+    <form action="goya.cgi" method="POST">
+       下記のボタンを押すと、品質が悪いもの（false）のgoyaの情報を載せたページが表示される<br><br>
+       <!-- valueには、送りたいデータを代入する -->
+       <!-- name="goya"を、情報の目印とする -->
+     
+       <input type="text" name="goya" value="<%= data.join(' ') %>">
+      <input type="submit" name="送信" >
+    </form>
+  </body>
+</html>
