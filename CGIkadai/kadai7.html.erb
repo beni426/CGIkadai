@@ -3,10 +3,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <h1>This is the seventh homework</h1>
+    <h1>This is CGI homework</h1>
+    <h1>テスト</h1>
     <% require 'pg' %>
     <% connection = PG::connect(dbname: "goya") %>
     <% connection.internal_encoding = "UTF-8" %>
+    
+    <form action='indicate.cgi' method='POST'>
+      下記に文字を入力してください<br><br>
+      <!-- このinputに入力された情報が、submitの送信ボタンでデータとして送られる -->
+      <!-- name='input'は送られた先の目印となる情報 -->
+      <!-- type="text"は入力ができるフォームを作成するという記述 -->
+      <input type="text"  name='input' ><br>
+      <input type="submit" name="送信" >
+    </form>
+  
    
     <% result = connection.exec("select length,weight,quality,give_for,date from crops WHERE NOT (give_for ='自家消費');") %>
     <% data = [] %>
@@ -21,9 +32,7 @@
        <input type="text" name="goya" value="<%= data.join(' ') %>">
       <input type="submit" name="送信" >
     </form>
-    <% require 'pg' %>
-    <% connection = PG::connect(dbname: "goya") %>
-    <% connection.internal_encoding = "UTF-8" %>
+ 
    
     <% result = connection.exec("select length,weight,quality,give_for,date from crops WHERE quality=false"); %>
     <% data = [] %>
